@@ -1,11 +1,42 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <template v-if="$store.state.auth">
+      <router-link to="/invoice">Home</router-link> |
+      <span v-if="$store.state.user != null">
+        {{ $store.state.user.name }}
+      </span>
+      |
+      <button
+        @click="logout"
+        class="relative inline-block text-sm font-medium text-white group focus:outline-none focus:ring"
+      >
+        <span
+          class="absolute inset-0 border border-red-600 group-active:border-red-500"
+        ></span>
+        <span
+          class="block px-12 py-3 bg-red-600 border border-red-600 transition-transform active:border-red-500 active:bg-red-500 group-hover:-translate-x-1 group-hover:-translate-y-1"
+        >
+          Salir
+        </span>
+      </button>
+    </template>
+    <template v-else>
+      <router-link to="/login">Login</router-link> |
+      <router-link to="/register">Register</router-link>
+    </template>
   </nav>
   <router-view />
 </template>
-
+<script>
+export default {
+  methods: {
+    async logout() {
+      await this.$store.dispatch("logout");
+      this.$router.push({ name: "login" });
+    },
+  },
+};
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
