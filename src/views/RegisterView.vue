@@ -166,7 +166,7 @@ export default {
         .then((response) => {
           this.response = response.data;
           this.user = this.response.user;
-          this.$router.push("/invoice");
+          this.$router.push("/login");
         })
         .catch((error) => {
           this.response = error.response.data;

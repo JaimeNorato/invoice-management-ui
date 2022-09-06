@@ -1,7 +1,7 @@
 <template>
   <nav>
     <template v-if="$store.state.auth">
-      <router-link to="/invoice">Home</router-link> |
+      <router-link to="/invoice">Facturas</router-link> |
       <span v-if="$store.state.user != null">
         {{ $store.state.user.name }}
       </span>

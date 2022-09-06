@@ -27,8 +27,8 @@ const routes = [
     component: InvoiceView,
   },
   {
-    path: "/invoice-new",
-    name: "invoice-new",
+    path: "/invoicenew",
+    name: "invoicenew",
     component: InvoiceNewView,
   },
   {

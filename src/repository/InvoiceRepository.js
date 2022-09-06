@@ -19,7 +19,8 @@ export default {
   /***
    * registra una nueva factura
    */
-  createInvoice(payload) {
+  createInvoice(token, payload) {
+    this.addAuthHeader(token);
     return Client.post(`${resource}`, payload);
   },
   /**
@@ -41,8 +42,8 @@ export default {
     return Client.delete(`${resource}/${id}`);
   },
   /**
-  * agregael token de autenticacion a la cabecera
-  */
+   * agregael token de autenticacion a la cabecera
+   */
   addAuthHeader(token) {
     Client.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   },

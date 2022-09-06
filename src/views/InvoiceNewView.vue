@@ -1,5 +1,11 @@
 <template>
   <div class="px-4 py-16 mx-auto max-w-screen-xl sm:px-6 lg:px-8">
+    <router-link
+      to="/invoice"
+      class="inline-block px-12 py-3 text-sm font-medium text-indigo-600 border border-indigo-600 rounded hover:bg-indigo-600 hover:text-white active:bg-indigo-500 focus:outline-none focus:ring"
+    >
+      Regresar
+    </router-link>
     <div class="max-w-lg mx-auto">
       <h1 class="text-2xl font-bold text-center text-indigo-600 sm:text-3xl">
         Nueva Factura
@@ -14,7 +20,7 @@
         </strong>
       </div>
       <form
-        @submit.prevent="create"
+        @submit.prevent="saveData"
         class="p-8 mt-6 mb-0 rounded-lg shadow-2xl space-y-4"
       >
         <p class="text-lg font-medium">Registrar nueva Factura</p>
@@ -47,8 +53,16 @@
         <div>
           <label for="issuer_id" class="text-sm font-medium">Emisor</label>
           <div class="relative mt-1">
-            <select v-model="form.issuer_id" id="issuer_id">
-              <option v-for="issuer in issuers" :value="issuer.id" v-bind:key="issuer.id">
+            <select
+              v-model="form.issuer_id"
+              id="issuer_id"
+              class="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
+            >
+              <option
+                v-for="issuer in issuers"
+                :value="issuer.id"
+                v-bind:key="issuer.id"
+              >
                 {{ issuer.name }}
               </option>
             </select>
@@ -57,8 +71,16 @@
         <div>
           <label for="receiver_id" class="text-sm font-medium">Receptor</label>
           <div class="relative mt-1">
-            <select v-model="form.receiver_id" id="receiver_id">
-              <option v-for="receiver in receivers" :value="receiver.id" v-bind:key="receiver.id">
+            <select
+              v-model="form.receiver_id"
+              id="receiver_id"
+              class="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
+            >
+              <option
+                v-for="receiver in receivers"
+                :value="receiver.id"
+                v-bind:key="receiver.id"
+              >
                 {{ receiver.name }}
               </option>
             </select>
@@ -70,7 +92,7 @@
             <input
               type="number"
               id="subtotal"
-              v-model="form.date_time"
+              v-model="form.subtotal"
               class="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
               placeholder="Subtotal"
             />
@@ -96,7 +118,7 @@
               id="total"
               v-model="form.total"
               class="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
-              placeholder="Fecha y hora"
+              placeholder="Total"
             />
           </div>
         </div>
@@ -124,9 +146,10 @@ export default {
       error: false,
       issuers: [],
       receivers: [],
+      token: "",
       form: {
         number: "",
-        date_time: "",
+        date_time: "2022-09-02 04:52:21",
         issuer_id: "",
         receiver_id: "",
         subtotal: "",
@@ -136,29 +159,30 @@ export default {
     };
   },
   created() {
-    this.loadData(this.$store.state.token);
+    this.token = this.$store.state.token;
+    this.loadData();
   },
   methods: {
-    create: function () {
-      InvoiceRepository.create(this.form)
+    saveData: function () {
+      InvoiceRepository.createInvoice(this.token, this.form)
         .then((response) => {
           console.log(response);
-          this.$router.push({ name: "invoices" });
+          this.$router.push({ name: "/invoice" });
         })
         .catch((error) => {
           console.log(error);
           this.error = true;
         });
     },
-    loadData: function (token) {
-      IssuerRepository.list(token)
+    loadData: function () {
+      IssuerRepository.list(this.token)
         .then((response) => {
           this.issuers = response.data;
         })
         .catch((error) => {
           console.log(error);
         });
-      ReceiverRepository.list(token)
+      ReceiverRepository.list(this.token)
         .then((response) => {
           this.receivers = response.data;
         })
